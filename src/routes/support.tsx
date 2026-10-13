@@ -1,0 +1,4 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { Placeholder,pageHead } from '@/components/bodywise/placeholder';
+export const Route=createFileRoute('/support')({validateSearch:(search:Record<string,unknown>): {concern?:string | undefined;appointment?:boolean | undefined} =>({concern:typeof search['concern']==='string'?search['concern']:undefined,appointment:search['appointment']===true||search['appointment']==='true'?true:undefined}),head:()=>pageHead('Concerns & Support','Help with Be Bodywise products and consultations.'),component:Support});
+function Support(){const {concern,appointment}=Route.useSearch();return <Placeholder title={appointment?'Your Consultation':concern || 'Concerns & Support'} kind="support" detail={appointment?'Tomorrow · 11:00 AM · Dr. Riya Kapoor · Online video consultation (demo)':concern?'Your demo concern has been received.':'Product care, concerns and expert support'}/>;}
