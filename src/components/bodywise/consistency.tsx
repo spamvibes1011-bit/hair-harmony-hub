@@ -1,4 +1,5 @@
 import { Check, Flame, ChevronRight } from 'lucide-react';
+import { dayKey, daysAgo } from './products';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useDemo } from './demo-state';
