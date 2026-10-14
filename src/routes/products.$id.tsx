@@ -47,7 +47,7 @@ function ProductPage() {
           <ul className="max-h-48 space-y-1 overflow-auto pr-1">{log.length ? log.map(d => <li key={d} className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs odd:bg-secondary"><span>{parseDay(d).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</span><span className="status"><Check size={11} /> Applied</span></li>) : <li className="text-xs text-muted-foreground">No applications logged yet.</li>}</ul>
           <Button asChild variant="outline" className="mt-5 w-full text-xs"><Link to="/journey" search={{ product: p.id }}><ChartNoAxesCombined /> View my hair journey</Link></Button>
         </section>
-        <section className="panel"><div className="section-header"><div><h2 className="section-title">Something not right?</h2><p className="section-subtitle">Tell us and we’ll look into it</p></div><ShieldAlert size={18} className="text-primary" /></div>
+        <section id="concern" className="panel scroll-mt-24"><div className="section-header"><div><h2 className="section-title">Something not right?</h2><p className="section-subtitle">Tell us and we’ll look into it</p></div><ShieldAlert size={18} className="text-primary" /></div>
           {sent && <p role="status" className="mb-3 rounded-lg bg-accent p-3 text-xs text-primary">Concern submitted. Status: Pending.</p>}
           {open ? <form onSubmit={submit} className="space-y-3">
             <fieldset className="flex flex-wrap gap-2"><legend className="mb-2 text-xs font-semibold">Type of concern</legend>{CONCERN_TYPES.map(t => <Button type="button" key={t} size="sm" variant={type === t ? 'default' : 'outline'} aria-pressed={type === t} className="text-[11px]" onClick={() => setType(t)}>{t}</Button>)}</fieldset>

@@ -26,7 +26,7 @@ async function shrink(file: File): Promise<string> {
 }
 
 export const Route = createFileRoute('/journey')({
-  validateSearch: (s: Record<string, unknown>) => ({ product: typeof s.product === 'string' && getProduct(s.product) ? s.product : 'hair-growth-roll-on' }),
+  validateSearch: (s: Record<string, unknown>): { product?: string } => ({ product: typeof s.product === 'string' && getProduct(s.product) ? s.product : undefined }),
   head: () => { const t = 'My Hair Journey | Be Bodywise'; const d = 'Track daily check-ins, photos and progress with your Be Bodywise hair products.'; return { meta: [{ title: t }, { name: 'description', content: d }, { property: 'og:title', content: t }, { property: 'og:description', content: d }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }; },
   component: Journey,
 });
@@ -38,7 +38,7 @@ function Choice({ label, opts, value, set }: { label: string; opts: string[]; va
 function Journey() {
   const { product } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const p = getProduct(product)!;
+  const p = getProduct(product ?? 'hair-growth-roll-on')!;
   const { history } = useDemo();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [ready, setReady] = useState(false);
