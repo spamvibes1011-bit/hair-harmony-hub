@@ -45,7 +45,7 @@ function ProductPage() {
           <div className="grid grid-cols-3 gap-3 text-center">{[['Started', fmt(start)], ['Days since start', String(p.startOffset)], ['Application days', String(log.length)]].map(([k, v]) => <div key={k} className="rounded-xl bg-secondary p-3"><p className="text-base font-extrabold">{v}</p><p className="mt-1 text-[10px] text-muted-foreground">{k}</p></div>)}</div>
           <h3 className="mt-5 mb-2 text-xs font-bold">Application history</h3>
           <ul className="max-h-48 space-y-1 overflow-auto pr-1">{log.length ? log.map(d => <li key={d} className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs odd:bg-secondary"><span>{parseDay(d).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</span><span className="status"><Check size={11} /> Applied</span></li>) : <li className="text-xs text-muted-foreground">No applications logged yet.</li>}</ul>
-          <Button asChild variant="outline" className="mt-5 w-full text-xs"><Link to="/journey"><ChartNoAxesCombined /> View my hair journey</Link></Button>
+          <Button asChild variant="outline" className="mt-5 w-full text-xs"><Link to="/journey" search={{ product: p.id }}><ChartNoAxesCombined /> View my hair journey</Link></Button>
         </section>
         <section className="panel"><div className="section-header"><div><h2 className="section-title">Something not right?</h2><p className="section-subtitle">Tell us and we’ll look into it</p></div><ShieldAlert size={18} className="text-primary" /></div>
           {sent && <p role="status" className="mb-3 rounded-lg bg-accent p-3 text-xs text-primary">Concern submitted. Status: Pending.</p>}
