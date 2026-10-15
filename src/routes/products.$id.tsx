@@ -55,7 +55,7 @@ function ProductPage() {
             {(type === 'Irritation' || type === 'Increased shedding') && <p className="flex gap-2 text-[10px] leading-4 text-warning"><AlertTriangle size={14} className="shrink-0" /> If symptoms are severe, stop use and consult a qualified healthcare professional.</p>}
             <div className="flex gap-2"><Button type="submit" className="flex-1">Submit concern</Button><Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button></div>
           </form> : <Button variant="outline" className="w-full" onClick={() => { setOpen(true); setSent(false); }}><ShieldAlert /> Report a Concern</Button>}
-          {mine.length > 0 && <ul className="mt-4">{mine.map(c => <li key={c.id} className="issue-row"><div><h3 className="text-xs font-semibold">{c.type}</h3><p className="mt-1 text-[10px] text-muted-foreground">{fmt(new Date(c.date))} · {c.details}</p></div><span className="status pending">{c.status}</span></li>)}</ul>}
+          {mine.length > 0 && <ul className="mt-4">{mine.map(c => <li key={c.id}><Link to="/support" search={{ concern: c.id }} className="issue-row"><div><h3 className="text-xs font-semibold">{c.type}</h3><p className="mt-1 text-[10px] text-muted-foreground">{fmt(new Date(c.date))}{c.demo ? ' · Demo case' : ''} · {c.details}</p></div><span className={`status ${c.status === 'Pending' ? 'pending' : c.status === 'Under Review' ? 'review' : ''}`}>{c.status}</span></Link></li>)}</ul>}
         </section>
       </div>
     </div>
