@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { AlertTriangle, ArrowLeft, Camera, Check, ChevronRight, Clock, Headphones, MessageCircle, Phone, ShieldAlert, Stethoscope, Video, X, CalendarDays, MapPin } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Camera, ChevronRight, Clock, Headphones, MessageCircle, Phone, ShieldAlert, Stethoscope, Video, X, CalendarDays, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { pageHead } from '@/components/bodywise/placeholder';
 import { useDemo, historyOf, isConcerning, NEXT, type Concern } from '@/components/bodywise/demo-state';
@@ -121,6 +121,6 @@ function Support() {
         </section>
       </div>
     </div>
-    {!ready && <span className="sr-only"><Check /></span>}
+    
   </main>;
 }
