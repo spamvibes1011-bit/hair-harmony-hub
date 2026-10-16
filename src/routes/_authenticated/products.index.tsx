@@ -4,7 +4,7 @@ import { pageHead } from '@/components/bodywise/placeholder';
 import { useDemo } from '@/components/bodywise/demo-state';
 import { PRODUCTS } from '@/components/bodywise/products';
 
-export const Route = createFileRoute('/products/')({ head: () => pageHead('My Products', 'Your purchased Be Bodywise products and personal care routine.'), component: ProductsPage });
+export const Route = createFileRoute('/_authenticated/products/')({ head: () => pageHead('My Products', 'Your purchased Be Bodywise products and personal care routine.'), component: ProductsPage });
 
 function ProductsPage() {
   const { isAppliedToday, history } = useDemo();
