@@ -12,7 +12,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { DemoProvider } from "@/components/bodywise/demo-state";
-import { AppShell } from "@/components/bodywise/shell";
+import { Toaster } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -120,11 +121,21 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      router.invalidate();
+      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [router, queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <DemoProvider><AppShell><Outlet /></AppShell></DemoProvider> breaks all child routes. */}
-      <DemoProvider><AppShell><Outlet /></AppShell></DemoProvider>
+      {/* Required: nested routes render here. The signed-in app shell lives in _authenticated/route.tsx. */}
+      <DemoProvider><Outlet /></DemoProvider>
+      <Toaster />
     </QueryClientProvider>
   );
 }
