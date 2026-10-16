@@ -7,7 +7,7 @@ import { useDemo, historyOf, isConcerning, NEXT, type Concern } from '@/componen
 import { PRODUCTS, CONCERN_TYPES, getProduct, fmt } from '@/components/bodywise/products';
 
 type Search = { concern?: string | undefined; appointment?: boolean | undefined; product?: string | undefined; symptom?: string | undefined; details?: string | undefined };
-export const Route = createFileRoute('/support')({
+export const Route = createFileRoute('/_authenticated/support')({
   validateSearch: (s: Record<string, unknown>): Search => ({
     concern: typeof s['concern'] === 'string' ? s['concern'] : undefined,
     appointment: s['appointment'] === true || s['appointment'] === 'true' ? true : undefined,
