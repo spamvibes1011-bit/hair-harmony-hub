@@ -4,5 +4,5 @@
 - [x] Verify daily logging, navigation and mobile layout.
 
 # Remaining error verification
-- [ ] Fix verified errors in authentication pages without changing features.
-- [ ] Verify routing tests, live pages, and the automatic build result.
+- [x] Fix verified errors in authentication pages without changing features.
+- [x] Verify routing tests, live pages, and the automatic build result.
