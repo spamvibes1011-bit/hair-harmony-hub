@@ -8,6 +8,7 @@
 - [x] Verify routing tests, live pages, and the automatic build result.
 
 # Mosaic evaluation
-- [ ] Make every demo page public, preserving navigation and saved demo state.
-- [ ] Require and display the entered full name for optional signup; allow simple passwords.
-- [ ] Switch primary accents to deep navy and verify the dashboard and connected flows without login.
+- [x] Make every demo page public, preserving navigation and saved demo state.
+- [x] Require and display the entered full name for optional signup; allow simple passwords in app validation.
+- [x] Switch primary accents to deep navy and verify the dashboard and connected flows without login.
+- [ ] Verify hosted password rules; only the owner can change minimum length/required characters in Cloud → Users → Auth settings → Email → Password rules.
