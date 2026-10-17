@@ -33,7 +33,7 @@ function ResetPassword() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  async function submit(e: FormEvent) {
+  async function submit(e: FormEvent): Promise<unknown> {
     e.preventDefault();
     if (password.length < 8) return toast.error("Use at least 8 characters.");
     if (password !== confirm) return toast.error("Passwords don't match.");
