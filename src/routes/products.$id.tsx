@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useDemo } from '@/components/bodywise/demo-state';
 import { getProduct, parseDay, diffDays, daysAgo, fmt, CONCERN_TYPES } from '@/components/bodywise/products';
 
-export const Route = createFileRoute('/_authenticated/products/$id')({
+export const Route = createFileRoute('/products/$id')({
   loader: ({ params }) => { const p = getProduct(params.id); if (!p) throw notFound(); return { name: p.name }; },
   head: ({ loaderData }) => { const t = `${loaderData?.name ?? 'Product'} | Be Bodywise`; const d = 'Batch details, usage instructions and your application history.'; return { meta: [{ title: t }, { name: 'description', content: d }, { property: 'og:title', content: t }, { property: 'og:description', content: d }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }; },
   notFoundComponent: () => <main className="page text-center"><h1 className="text-2xl font-bold">Product not found</h1><Button asChild className="mt-6"><Link to="/products">Back to My Products</Link></Button></main>,

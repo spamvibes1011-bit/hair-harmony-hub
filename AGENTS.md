@@ -10,6 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## App structure
-- Shared navigation and the dashboard demo provider live in the root shell so state remains consistent across navigation.
-- Dashboard-only demo interactions use browser-local state; no medical or account data is collected, and expanded product, journey and support screens remain placeholders.
+- Public content routes share navigation and the demo provider in the root shell so all demo workflows remain accessible without an account.
+- Product applications, journey entries/photos and concerns persist in browser-local demo state so navigation preserves evaluation progress without exposing account records.
+- Optional authentication provides display names through a shared context and stores signup names in user metadata so guest access never depends on an auth request.
+- Shared signup validation defines the client password minimum and required-name rule so signup and recovery stay consistent.
 - Product routes use a parent Outlet with separate index and detail leaves to keep navigation unambiguous.
