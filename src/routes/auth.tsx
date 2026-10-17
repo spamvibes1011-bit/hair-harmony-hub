@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MIN_PASSWORD_LENGTH, signupMetadata } from "@/lib/signup";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -79,13 +80,13 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else if (mode === "signup") {
-        if (password.length < 8) throw new Error("Use at least 8 characters for your password.");
+        const metadata = signupMetadata(name, password);
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: window.location.origin,
-            data: { display_name: name.trim() || undefined },
+            data: metadata,
           },
         });
         if (error) throw error;
@@ -161,9 +162,10 @@ function AuthPage() {
           <form onSubmit={submit} className={`space-y-4 ${mode === "forgot" ? "mt-6" : ""}`}>
             {mode === "signup" && (
               <div className="space-y-1.5">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="name"
@@ -203,7 +205,7 @@ function AuthPage() {
                   id="password"
                   type="password"
                   required
-                  minLength={mode === "signup" ? 8 : undefined}
+                  minLength={mode === "signup" ? MIN_PASSWORD_LENGTH : undefined}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete={mode === "signup" ? "new-password" : "current-password"}
@@ -254,6 +256,9 @@ function AuthPage() {
               </>
             )}
           </p>
+          <Button asChild variant="outline" className="mt-5 w-full">
+            <Link to="/">Continue without signing in</Link>
+          </Button>
         </div>
       </div>
     </main>

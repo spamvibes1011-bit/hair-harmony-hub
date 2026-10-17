@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MIN_PASSWORD_LENGTH } from "@/lib/signup";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
@@ -42,8 +43,8 @@ function ResetPassword() {
 
   async function submit(e: FormEvent): Promise<void> {
     e.preventDefault();
-    if (password.length < 8) {
-      toast.error("Use at least 8 characters.");
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      toast.error("Use at least 6 characters.");
       return;
     }
     if (password !== confirm) {
@@ -78,7 +79,7 @@ function ResetPassword() {
                 id="pw"
                 type="password"
                 required
-                minLength={8}
+                minLength={MIN_PASSWORD_LENGTH}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
