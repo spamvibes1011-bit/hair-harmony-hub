@@ -129,7 +129,7 @@ function RootComponent() {
   const [fullName, setFullName] = useState("");
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      const name = session?.user.user_metadata?.full_name ?? session?.user.user_metadata?.display_name;
+      const name = session?.user.user_metadata?.["full_name"] ?? session?.user.user_metadata?.["display_name"];
       setFullName(typeof name === "string" ? name : "");
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
