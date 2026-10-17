@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Bell, Check, Pencil, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { useDemo, isConcerning } from './demo-state';
 import { dayKey, getProduct } from './products';
@@ -12,7 +13,7 @@ const Context = createContext<ReminderState | null>(null);
 export function useReminders() { const state = useContext(Context); if (!state) throw new Error('Reminder provider required'); return state; }
 
 export function ReminderProvider({ children }: { children: ReactNode }) {
-  const { ready: demoReady, isAppliedToday, concerns } = useDemo();
+  const { ready: demoReady, isAppliedToday, applyToday, concerns } = useDemo();
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [ready, setReady] = useState(false);
   const [now, setNow] = useState(() => new Date());
@@ -41,13 +42,14 @@ export function ReminderProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const pending = due.filter(r => r.notifiedOn !== dayKey(now));
     if (!pending.length) return;
+    pending.forEach(r => toast(`Time to apply ${getProduct(r.productId)?.name}`, { description: `Scheduled for ${r.time}`, duration: 15000, action: { label: 'Mark completed', onClick: () => applyToday(r.productId) } }));
     if ('Notification' in window && Notification.permission === 'granted') pending.forEach(r => deliver(r.productId));
     setReminders(list => list.map(r => pending.some(p => p.productId === r.productId) ? { ...r, notifiedOn: dayKey(now) } : r));
   }, [now, reminders, ready, demoReady, concerns]);
   const enableNotifications = async () => {
     if (!('Notification' in window) || !window.isSecureContext) { setNotificationStatus('Browser notifications are unavailable here. In-app reminders still work.'); return; }
     if (window.top !== window.self) { setNotificationStatus('Open the app in its own tab to allow notifications. The embedded preview cannot ask permission.'); return; }
-    try { const permission = await Notification.requestPermission(); setGranted(permission === 'granted'); setNotificationStatus(permission === 'granted' ? 'Browser permission granted. Reminders need this app open; closed-app push is not connected.' : permission === 'denied' ? 'Notifications are blocked. Allow them in your browser’s site settings; in-app reminders still work.' : 'Permission was not granted. You can enable notifications again later.'); } catch { setNotificationStatus('Permission could not be requested. Open the app in its own tab and check site settings.'); }
+    try { await Notification.requestPermission(); const permission = Notification.permission; setGranted(permission === 'granted'); setNotificationStatus(permission === 'granted' ? 'Browser permission granted. Reminders need this app open; closed-app push is not connected.' : permission === 'denied' ? 'Notifications are blocked. Allow them in your browser’s site settings; in-app reminders still work.' : 'Permission was not granted. You can enable notifications again later.'); } catch { setNotificationStatus('Permission could not be requested. Open the app in its own tab and check site settings.'); }
   };
   return <Context.Provider value={{ reminders, ready, now, due, error, granted, notificationStatus, enableNotifications, testNotification: () => { if ('Notification' in window && Notification.permission === 'granted') deliver(); }, save: r => setReminders(list => [...list.filter(x => x.productId !== r.productId), r]), remove: id => setReminders(list => list.filter(r => r.productId !== id)), toggle: id => setReminders(list => list.map(r => r.productId === id ? { ...r, enabled: !r.enabled } : r)) }}>{children}</Context.Provider>;
 }
