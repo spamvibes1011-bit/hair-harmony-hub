@@ -12,7 +12,10 @@ export const Route = createFileRoute("/reset-password")({
       { title: "Set a new password | Be Bodywise" },
       { name: "description", content: "Choose a new password for your Be Bodywise account." },
       { property: "og:title", content: "Set a new password | Be Bodywise" },
-      { property: "og:description", content: "Choose a new password for your Be Bodywise account." },
+      {
+        property: "og:description",
+        content: "Choose a new password for your Be Bodywise account.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -28,8 +31,12 @@ function ResetPassword() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((e) => { if (e === "PASSWORD_RECOVERY" || e === "SIGNED_IN") setReady(true); });
-    supabase.auth.getSession().then(({ data }) => { if (data.session) setReady(true); });
+    const { data: sub } = supabase.auth.onAuthStateChange((e) => {
+      if (e === "PASSWORD_RECOVERY" || e === "SIGNED_IN") setReady(true);
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) setReady(true);
+    });
     return () => sub.subscription.unsubscribe();
   }, []);
 
@@ -50,12 +57,38 @@ function ResetPassword() {
       <div className="w-full max-w-sm rounded-2xl border bg-card p-7 shadow-sm">
         <h1 className="text-xl font-bold">Set a new password</h1>
         {!ready ? (
-          <p className="mt-3 text-sm text-muted-foreground">Open this page from the reset link in your email. If the link expired, request a new one from the sign-in page.</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Open this page from the reset link in your email. If the link expired, request a new one
+            from the sign-in page.
+          </p>
         ) : (
           <form onSubmit={submit} className="mt-6 space-y-4">
-            <div className="space-y-1.5"><Label htmlFor="pw">New password</Label><Input id="pw" type="password" required minLength={8} value={password} onChange={e => setPassword(e.target.value)} autoComplete="new-password" /></div>
-            <div className="space-y-1.5"><Label htmlFor="pw2">Confirm password</Label><Input id="pw2" type="password" required value={confirm} onChange={e => setConfirm(e.target.value)} autoComplete="new-password" /></div>
-            <Button type="submit" className="w-full" disabled={busy}>{busy ? "Saving…" : "Update password"}</Button>
+            <div className="space-y-1.5">
+              <Label htmlFor="pw">New password</Label>
+              <Input
+                id="pw"
+                type="password"
+                required
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="pw2">Confirm password</Label>
+              <Input
+                id="pw2"
+                type="password"
+                required
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                autoComplete="new-password"
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={busy}>
+              {busy ? "Saving…" : "Update password"}
+            </Button>
           </form>
         )}
       </div>
