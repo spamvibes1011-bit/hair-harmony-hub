@@ -1,6 +1,6 @@
 # Dashboard
-- [ ] Add persistent product reminders, dashboard next reminder, and application completion integration.
-- [ ] Test reminder schedules, persistence, completion, and browser notification behaviour.
+- [x] Add persistent product reminders, dashboard next reminder, and application completion integration.
+- [x] Test reminder schedules, persistence, completion, and browser notification behaviour (in-app delivery verified; browser denied system notifications, no delivery claim).
 - [ ] Enable closed-app push notifications — blocked pending Firebase connection (declined).
 - [x] Build the branded dashboard, goal controls and daily consistency tracker.
 - [x] Connect product, journey and support placeholders and notifications.
