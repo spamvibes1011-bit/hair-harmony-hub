@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedJourneyRouteImport } from './routes/_authenticated/journey'
-import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated/products'
-import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
-import { Route as AuthenticatedProductsIndexRouteImport } from './routes/_authenticated/products.index'
-import { Route as AuthenticatedProductsIdRouteImport } from './routes/_authenticated/products.$id'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as ProductsIndexRouteImport } from './routes/products.index'
+import { Route as ProductsIdRouteImport } from './routes/products.$id'
 
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -28,120 +28,115 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JourneyRoute = JourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedJourneyRoute = AuthenticatedJourneyRouteImport.update({
-  id: '/journey',
-  path: '/journey',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
+const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedProductsIndexRoute =
-  AuthenticatedProductsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedProductsRoute,
-  } as any)
-const AuthenticatedProductsIdRoute = AuthenticatedProductsIdRouteImport.update({
+const ProductsIndexRoute = ProductsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProductsRoute,
+} as any)
+const ProductsIdRoute = ProductsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => AuthenticatedProductsRoute,
+  getParentRoute: () => ProductsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedIndexRoute
+  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/journey': typeof JourneyRoute
+  '/products': typeof ProductsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
-  '/journey': typeof AuthenticatedJourneyRoute
-  '/products': typeof AuthenticatedProductsRouteWithChildren
-  '/support': typeof AuthenticatedSupportRoute
-  '/products/$id': typeof AuthenticatedProductsIdRoute
-  '/products/': typeof AuthenticatedProductsIndexRoute
+  '/support': typeof SupportRoute
+  '/products/$id': typeof ProductsIdRoute
+  '/products/': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/journey': typeof JourneyRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/journey': typeof AuthenticatedJourneyRoute
-  '/support': typeof AuthenticatedSupportRoute
-  '/': typeof AuthenticatedIndexRoute
-  '/products/$id': typeof AuthenticatedProductsIdRoute
-  '/products': typeof AuthenticatedProductsIndexRoute
+  '/support': typeof SupportRoute
+  '/products/$id': typeof ProductsIdRoute
+  '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/journey': typeof JourneyRoute
+  '/products': typeof ProductsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
-  '/_authenticated/journey': typeof AuthenticatedJourneyRoute
-  '/_authenticated/products': typeof AuthenticatedProductsRouteWithChildren
-  '/_authenticated/support': typeof AuthenticatedSupportRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/products/$id': typeof AuthenticatedProductsIdRoute
-  '/_authenticated/products/': typeof AuthenticatedProductsIndexRoute
+  '/support': typeof SupportRoute
+  '/products/$id': typeof ProductsIdRoute
+  '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
-    | '/reset-password'
     | '/journey'
     | '/products'
+    | '/reset-password'
     | '/support'
     | '/products/$id'
     | '/products/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/auth'
-    | '/reset-password'
-    | '/journey'
-    | '/support'
     | '/'
+    | '/auth'
+    | '/journey'
+    | '/reset-password'
+    | '/support'
     | '/products/$id'
     | '/products'
   id:
     | '__root__'
-    | '/_authenticated'
+    | '/'
     | '/auth'
+    | '/journey'
+    | '/products'
     | '/reset-password'
-    | '/_authenticated/journey'
-    | '/_authenticated/products'
-    | '/_authenticated/support'
-    | '/_authenticated/'
-    | '/_authenticated/products/$id'
-    | '/_authenticated/products/'
+    | '/support'
+    | '/products/$id'
+    | '/products/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  JourneyRoute: typeof JourneyRoute
+  ProductsRoute: typeof ProductsRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SupportRoute: typeof SupportRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
+    '/': {
+      id: '/'
+      path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -151,6 +146,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/journey': {
+      id: '/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof JourneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -158,87 +167,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/journey': {
-      id: '/_authenticated/journey'
-      path: '/journey'
-      fullPath: '/journey'
-      preLoaderRoute: typeof AuthenticatedJourneyRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/products': {
-      id: '/_authenticated/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof AuthenticatedProductsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/support': {
-      id: '/_authenticated/support'
+    '/support': {
+      id: '/support'
       path: '/support'
       fullPath: '/support'
-      preLoaderRoute: typeof AuthenticatedSupportRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/products/': {
-      id: '/_authenticated/products/'
+    '/products/': {
+      id: '/products/'
       path: '/'
       fullPath: '/products/'
-      preLoaderRoute: typeof AuthenticatedProductsIndexRouteImport
-      parentRoute: typeof AuthenticatedProductsRoute
+      preLoaderRoute: typeof ProductsIndexRouteImport
+      parentRoute: typeof ProductsRoute
     }
-    '/_authenticated/products/$id': {
-      id: '/_authenticated/products/$id'
+    '/products/$id': {
+      id: '/products/$id'
       path: '/$id'
       fullPath: '/products/$id'
-      preLoaderRoute: typeof AuthenticatedProductsIdRouteImport
-      parentRoute: typeof AuthenticatedProductsRoute
+      preLoaderRoute: typeof ProductsIdRouteImport
+      parentRoute: typeof ProductsRoute
     }
   }
 }
 
-interface AuthenticatedProductsRouteChildren {
-  AuthenticatedProductsIdRoute: typeof AuthenticatedProductsIdRoute
-  AuthenticatedProductsIndexRoute: typeof AuthenticatedProductsIndexRoute
+interface ProductsRouteChildren {
+  ProductsIdRoute: typeof ProductsIdRoute
+  ProductsIndexRoute: typeof ProductsIndexRoute
 }
 
-const AuthenticatedProductsRouteChildren: AuthenticatedProductsRouteChildren = {
-  AuthenticatedProductsIdRoute: AuthenticatedProductsIdRoute,
-  AuthenticatedProductsIndexRoute: AuthenticatedProductsIndexRoute,
+const ProductsRouteChildren: ProductsRouteChildren = {
+  ProductsIdRoute: ProductsIdRoute,
+  ProductsIndexRoute: ProductsIndexRoute,
 }
 
-const AuthenticatedProductsRouteWithChildren =
-  AuthenticatedProductsRoute._addFileChildren(
-    AuthenticatedProductsRouteChildren,
-  )
-
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedJourneyRoute: typeof AuthenticatedJourneyRoute
-  AuthenticatedProductsRoute: typeof AuthenticatedProductsRouteWithChildren
-  AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-}
-
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedJourneyRoute: AuthenticatedJourneyRoute,
-  AuthenticatedProductsRoute: AuthenticatedProductsRouteWithChildren,
-  AuthenticatedSupportRoute: AuthenticatedSupportRoute,
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-}
-
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+const ProductsRouteWithChildren = ProductsRoute._addFileChildren(
+  ProductsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  JourneyRoute: JourneyRoute,
+  ProductsRoute: ProductsRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
+  SupportRoute: SupportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

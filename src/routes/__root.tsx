@@ -6,12 +6,15 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useLocation,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { DemoProvider } from "@/components/bodywise/demo-state";
+import { AppShell } from "@/components/bodywise/shell";
+import { ProfileNameContext } from "@/components/bodywise/profile-name";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -122,8 +125,12 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const { pathname } = useLocation();
+  const [fullName, setFullName] = useState("");
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event) => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      const name = session?.user.user_metadata?.full_name ?? session?.user.user_metadata?.display_name;
+      setFullName(typeof name === "string" ? name : "");
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
@@ -133,8 +140,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. The signed-in app shell lives in _authenticated/route.tsx. */}
-      <DemoProvider><Outlet /></DemoProvider>
+      <ProfileNameContext.Provider value={fullName}>
+        <DemoProvider>
+          {pathname === "/auth" || pathname === "/reset-password" ? <Outlet /> : <AppShell><Outlet /></AppShell>}
+        </DemoProvider>
+      </ProfileNameContext.Provider>
       <Toaster />
     </QueryClientProvider>
   );
