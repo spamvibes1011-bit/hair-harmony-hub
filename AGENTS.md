@@ -15,3 +15,5 @@
 - Optional authentication provides display names through a shared context and stores signup names in user metadata so guest access never depends on an auth request.
 - Shared signup validation defines the client password minimum and required-name rule so signup and recovery stay consistent.
 - Product routes use a parent Outlet with separate index and detail leaves to keep navigation unambiguous.
+- Product reminders use a shared browser-local provider and local-time schedule helpers; foreground delivery never implies background push, which requires a connected messaging service.
+- Application completion uses the shared product history; journey application timelines derive from it rather than creating fabricated observation check-ins.

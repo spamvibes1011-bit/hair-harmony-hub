@@ -13,6 +13,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { DemoProvider } from "@/components/bodywise/demo-state";
+import { ReminderProvider } from "@/components/bodywise/reminders";
 import { AppShell } from "@/components/bodywise/shell";
 import { ProfileNameContext } from "@/components/bodywise/profile-name";
 import { Toaster } from "@/components/ui/sonner";
@@ -142,7 +143,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ProfileNameContext.Provider value={fullName}>
         <DemoProvider>
-          {pathname === "/auth" || pathname === "/reset-password" ? <Outlet /> : <AppShell><Outlet /></AppShell>}
+          <ReminderProvider>
+            {pathname === "/auth" || pathname === "/reset-password" ? <Outlet /> : <AppShell><Outlet /></AppShell>}
+          </ReminderProvider>
         </DemoProvider>
       </ProfileNameContext.Provider>
       <Toaster />

@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from '@tanstack/react-router';
 import { useState } from 'react';
 import { ArrowLeft, Check, CalendarDays, ShieldAlert, ChartNoAxesCombined, Info, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ProductReminder } from '@/components/bodywise/reminders';
 import { useDemo } from '@/components/bodywise/demo-state';
 import { getProduct, parseDay, diffDays, daysAgo, fmt, CONCERN_TYPES } from '@/components/bodywise/products';
 
@@ -13,9 +14,10 @@ export const Route = createFileRoute('/products/$id')({
 });
 
 function ProductPage() {
-  const { id } = Route.useParams(); const p = getProduct(id)!;
+  const { id } = Route.useParams(); const p = getProduct(id);
   const { history, isAppliedToday, applyToday, ready, concerns, addConcern } = useDemo();
   const [open, setOpen] = useState(false); const [type, setType] = useState<string>(CONCERN_TYPES[0]); const [details, setDetails] = useState(''); const [sent, setSent] = useState(false);
+  if (!p) throw notFound();
   const today = new Date(); const expiry = parseDay(p.expiry); const left = diffDays(today, expiry);
   const start = daysAgo(p.startOffset); const log = [...(history[p.id] ?? [])].sort().reverse(); const done = isAppliedToday(p.id);
   const mine = concerns.filter(c => c.productId === p.id);
@@ -31,6 +33,7 @@ function ProductPage() {
           <Button className="mt-5 h-11 w-full" variant={done ? 'secondary' : 'default'} disabled={done || !ready} onClick={() => applyToday(p.id)}><Check /> {done ? 'Applied today' : 'Apply Today'}</Button>
           {done && <p role="status" className="mt-2 text-center text-[11px] text-primary">Saved. Your dashboard tracker is updated.</p>}
         </section>
+        <ProductReminder key={p.id} productId={p.id} />
         <section className="panel"><h2 className="section-title mb-3">Pack details</h2>
           <Row k="Batch number" v={p.batch} /><Row k="Manufactured" v={fmt(parseDay(p.manufactured))} /><Row k="Expiry" v={fmt(expiry)} />
           <Row k="Days until expiry" v={left > 0 ? `${left} days` : 'Expired — do not use'} />
