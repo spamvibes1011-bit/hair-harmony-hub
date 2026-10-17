@@ -116,6 +116,7 @@ function Journey() {
           {pair.length > 0 && <Button variant="ghost" size="sm" className="mt-2 text-xs" onClick={() => setCompare([])}><X /> Clear</Button>}
         </section>
         <section className="panel"><h2 className="section-title mb-4">Timeline</h2>
+          {log.length > 0 && <details className="mb-5 border-b pb-4"><summary className="cursor-pointer text-xs font-semibold text-primary">Application history · {log.length} days</summary><ul className="mt-3 max-h-48 space-y-2 overflow-auto">{[...log].sort().reverse().map(date => <li key={date} className="flex justify-between text-xs"><span>{fmt(parseDay(date))}</span><span className="flex items-center gap-1 text-primary"><Check size={12} />Applied</span></li>)}</ul></details>}
           {mine.length === 0 ? <p className="text-xs text-muted-foreground">No check-ins yet. Save your first one to start your timeline.</p> :
             <ol className="relative space-y-5 border-l-2 border-accent pl-5">{mine.map(e => <li key={e.id} className="relative">
               <span className="absolute -left-[27px] top-1 h-3 w-3 rounded-full bg-primary" />

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { PRODUCTS, dayKey, daysAgo } from './products';
+import { logProductApplication } from './reminder-schedule';
 export type Goal = 'Hair' | 'Skin' | 'Body';
 export type Status = 'Pending' | 'Under Review' | 'Resolved';
 export type StatusEvent = { status: Status; date: string; note: string };
@@ -36,7 +37,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   useEffect(() => { try { const s = JSON.parse(localStorage.getItem(KEY) || '{}'); if (['Hair', 'Skin', 'Body'].includes(s.goal)) setGoal(s.goal); if (s.history) setHistory({ ...seedHistory(), ...s.history }); if (Array.isArray(s.concerns)) { const seeds = seedConcerns().filter(d => !s.concerns.some((c: Concern) => c.id === d.id)); setConcerns([...s.concerns, ...seeds]); } } catch { /* defaults */ } setReady(true); }, []);
   useEffect(() => { if (ready) { try { localStorage.setItem(KEY, JSON.stringify({ goal, history, concerns })); } catch { /* session only */ } } }, [goal, history, concerns, ready]);
   const isAppliedToday = (id: string) => (history[id] ?? []).includes(dayKey());
-  const applyToday = (id: string) => setHistory(h => (h[id] ?? []).includes(dayKey()) ? h : { ...h, [id]: [...(h[id] ?? []), dayKey()] });
+  const applyToday = (id: string) => setHistory(h => logProductApplication(h, id, dayKey()));
   const addConcern: DemoState['addConcern'] = c => { const id = crypto.randomUUID(); const date = new Date().toISOString(); setConcerns(list => [{ ...c, id, date, status: 'Pending', history: [{ status: 'Pending', date, note: NOTES.Pending }] }, ...list]); return id; };
   const advanceConcern = (id: string) => setConcerns(list => list.map(c => { const n = NEXT[c.status]; if (c.id !== id || !n) return c; const date = new Date().toISOString(); return { ...c, status: n, history: [...historyOf(c), { status: n, date, note: NOTES[n] }] }; }));
   return <DemoContext.Provider value={{ goal, setGoal, ready, history, isAppliedToday, applyToday, concerns, addConcern, advanceConcern, applied: isAppliedToday('hair-growth-roll-on'), logApplication: () => applyToday('hair-growth-roll-on') }}>{children}</DemoContext.Provider>;
