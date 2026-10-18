@@ -3,7 +3,7 @@ import shampoo from '@/assets/shampoo.jpg';
 import { CATALOG } from './catalog-data';
 
 export type Product = {
-  id: string; name: string; image?: string; size: string; frequency: string; goal: 'Hair' | 'Skin' | 'Body';
+  id: string; name: string; image?: string | undefined; size: string; frequency: string; goal: 'Hair' | 'Skin' | 'Body';
   batch: string; manufactured: string; expiry: string; startOffset: number;
   instructions: string[]; seedOffsets: number[];
 };
