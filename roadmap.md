@@ -1,4 +1,5 @@
 # Dashboard
+- [ ] Add + product entry with camera barcode scanning, manual product numbers and persistent ownership; verify addition and duplicate handling.
 - [x] Add persistent product reminders, dashboard next reminder, and application completion integration.
 - [x] Test reminder schedules, persistence, completion, and browser notification behaviour (in-app delivery verified; browser denied system notifications, no delivery claim).
 - [ ] Enable closed-app push notifications — blocked pending Firebase connection (declined).
