@@ -1,11 +1,11 @@
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
-import { Bell, Home, Package, ChartNoAxesCombined, Headphones, Check, LogIn, LogOut } from 'lucide-react';
+import { Bell, Home, Package, ChartNoAxesCombined, Headphones, ShoppingBag, Check, LogIn, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useProfileName } from './profile-name';
-const links = [{to:'/' as const,label:'Home',icon:Home},{to:'/products' as const,label:'My Products',icon:Package},{to:'/journey' as const,label:'My Hair Journey',icon:ChartNoAxesCombined},{to:'/support' as const,label:'Support',icon:Headphones}];
+const links = [{to:'/' as const,label:'Home',icon:Home},{to:'/products' as const,label:'My Products',icon:Package},{to:'/journey' as const,label:'My Hair Journey',icon:ChartNoAxesCombined},{to:'/shop' as const,label:'All Products',icon:ShoppingBag},{to:'/support' as const,label:'Support',icon:Headphones}];
 export function AppShell({children}: {children:React.ReactNode}) { const fullName=useProfileName(); const initials=fullName ? fullName.split(/\s+/).map(n=>n[0]).slice(0,2).join('').toUpperCase() : 'G'; const {pathname}=useLocation(); const navigate=useNavigate(); const [notifications,setNotifications]=useState(false); const [read,setRead]=useState(false); const [profileMenu,setProfileMenu]=useState(false);
  const nav=links.map(({to,label,icon:Icon})=><Link key={to} to={to} className={`nav-item ${pathname===to || (to==='/products' && pathname.startsWith('/products/'))?'active':''}`}><Icon size={17}/><span>{label}</span></Link>);
  const signOut=async()=>{ setProfileMenu(false); const {error}=await supabase.auth.signOut(); if(error){toast.error(error.message);return;} toast.success('Signed out'); navigate({to:'/'}); };
