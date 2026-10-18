@@ -169,7 +169,7 @@ function AuthPage() {
             </>
           )}
           <form onSubmit={submit} className={`space-y-4 ${mode === "forgot" ? "mt-6" : ""}`}>
-            {mode === "signup" && (
+            {mode !== "forgot" && (
               <div className="space-y-1.5">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
@@ -179,6 +179,7 @@ function AuthPage() {
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="name"
                   maxLength={80}
+                  placeholder="Shown in your greeting"
                 />
               </div>
             )}
@@ -214,10 +215,10 @@ function AuthPage() {
                   id="password"
                   type="password"
                   required
-                  minLength={mode === "signup" ? MIN_PASSWORD_LENGTH : undefined}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                  placeholder="Anything works — no rules"
                 />
               </div>
             )}
