@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
 import { useState } from 'react';
-import { ArrowLeft, Check, CalendarDays, ShieldAlert, ChartNoAxesCombined, Info, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Check, CalendarDays, ShieldAlert, ChartNoAxesCombined, Info, AlertTriangle, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductReminder } from '@/components/bodywise/reminders';
 import { useDemo } from '@/components/bodywise/demo-state';
@@ -18,7 +18,7 @@ function ProductPage() {
   const { history, isAppliedToday, applyToday, ready, concerns, addConcern } = useDemo();
   const [open, setOpen] = useState(false); const [type, setType] = useState<string>(CONCERN_TYPES[0]); const [details, setDetails] = useState(''); const [sent, setSent] = useState(false);
   if (!p) throw notFound();
-  const today = new Date(); const expiry = parseDay(p.expiry); const left = diffDays(today, expiry);
+  const today = new Date(); const expiry = p.expiry ? parseDay(p.expiry) : undefined; const left = expiry ? diffDays(today, expiry) : undefined;
   const start = daysAgo(p.startOffset); const log = [...(history[p.id] ?? [])].sort().reverse(); const done = isAppliedToday(p.id);
   const mine = concerns.filter(c => c.productId === p.id);
   const submit = (e: React.FormEvent) => { e.preventDefault(); addConcern({ productId: p.id, type, details: details.trim() }); setDetails(''); setOpen(false); setSent(true); };
@@ -28,15 +28,15 @@ function ProductPage() {
     <Button asChild variant="link" className="mb-5 p-0"><Link to="/products"><ArrowLeft /> My Products</Link></Button>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
       <div className="space-y-6">
-        <section className="panel"><div className="product-image h-64 rounded-xl"><img src={p.image} width={1024} height={1024} alt={`Be Bodywise ${p.name}`} /></div>
+        <section className="panel"><div className="product-image h-64 rounded-xl">{p.image ? <img src={p.image} width={1024} height={1024} alt={`Be Bodywise ${p.name}`} /> : <div className="flex h-full items-center justify-center bg-accent text-primary"><Package size={48} /></div>}</div>
           <h1 className="mt-5 text-2xl font-bold">{p.name}</h1><p className="mt-1 text-xs text-muted-foreground">{p.size} · {p.frequency}</p>
           <Button className="mt-5 h-11 w-full" variant={done ? 'secondary' : 'default'} disabled={done || !ready} onClick={() => applyToday(p.id)}><Check /> {done ? 'Applied today' : 'Apply Today'}</Button>
           {done && <p role="status" className="mt-2 text-center text-[11px] text-primary">Saved. Your dashboard tracker is updated.</p>}
         </section>
         <ProductReminder key={p.id} productId={p.id} />
         <section className="panel"><h2 className="section-title mb-3">Pack details</h2>
-          <Row k="Batch number" v={p.batch} /><Row k="Manufactured" v={fmt(parseDay(p.manufactured))} /><Row k="Expiry" v={fmt(expiry)} />
-          <Row k="Days until expiry" v={left > 0 ? `${left} days` : 'Expired — do not use'} />
+          <Row k="Batch number" v={p.batch || 'Check your pack'} /><Row k="Manufactured" v={p.manufactured ? fmt(parseDay(p.manufactured)) : 'Check your pack'} /><Row k="Expiry" v={expiry ? fmt(expiry) : 'Check your pack'} />
+          <Row k="Days until expiry" v={left === undefined ? 'Not available' : left > 0 ? `${left} days` : 'Expired — do not use'} />
           <p className="mt-3 flex gap-2 rounded-lg bg-secondary p-3 text-[10px] leading-4 text-muted-foreground"><Info size={14} className="shrink-0" /> Demo data only. Batch details are simulated for illustration and do not verify or authenticate a real product.</p>
         </section>
       </div>
