@@ -28,7 +28,7 @@ async function shrink(file: File): Promise<string> {
 export const Route = createFileRoute('/journey')({
   ssr: false,
   validateSearch: (s: Record<string, unknown>): { product?: string | undefined } => ({ product: typeof s['product'] === 'string' && getProduct(s['product']) ? s['product'] : undefined }),
-  head: () => { const t = 'My Hair Journey | Be Bodywise'; const d = 'Track daily check-ins, photos and progress with your Be Bodywise hair products.'; return { meta: [{ title: t }, { name: 'description', content: d }, { property: 'og:title', content: t }, { property: 'og:description', content: d }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }; },
+  head: () => { const t = 'My Hair Journey | Be Bodywise Consistency App'; const d = 'Track daily check-ins, photos and progress with your Be Bodywise hair products.'; return { meta: [{ title: t }, { name: 'description', content: d }, { property: 'og:title', content: t }, { property: 'og:description', content: d }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }; },
   component: Journey,
 });
 

@@ -6,7 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { normalizePassword, signupMetadata } from "@/lib/signup";
+import { legacyPassword, normalizePassword, signupMetadata } from "@/lib/signup";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -77,10 +77,16 @@ function AuthPage() {
     setNotice(null);
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({
+        let { error } = await supabase.auth.signInWithPassword({
           email,
           password: normalizePassword(password),
         });
+        if (error) {
+          ({ error } = await supabase.auth.signInWithPassword({
+            email,
+            password: legacyPassword(password),
+          }));
+        }
         if (error) throw error;
         const displayName = name.trim();
         if (displayName) {
