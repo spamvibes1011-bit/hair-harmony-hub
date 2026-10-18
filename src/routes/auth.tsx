@@ -6,7 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MIN_PASSWORD_LENGTH, signupMetadata } from "@/lib/signup";
+import { normalizePassword, signupMetadata } from "@/lib/signup";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -77,13 +77,22 @@ function AuthPage() {
     setNotice(null);
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password: normalizePassword(password),
+        });
         if (error) throw error;
+        const displayName = name.trim();
+        if (displayName) {
+          await supabase.auth.updateUser({
+            data: { display_name: displayName, full_name: displayName },
+          });
+        }
       } else if (mode === "signup") {
         const metadata = signupMetadata(name, password);
         const { data, error } = await supabase.auth.signUp({
           email,
-          password,
+          password: normalizePassword(password),
           options: {
             emailRedirectTo: window.location.origin,
             data: metadata,
@@ -160,7 +169,7 @@ function AuthPage() {
             </>
           )}
           <form onSubmit={submit} className={`space-y-4 ${mode === "forgot" ? "mt-6" : ""}`}>
-            {mode === "signup" && (
+            {mode !== "forgot" && (
               <div className="space-y-1.5">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
@@ -170,6 +179,7 @@ function AuthPage() {
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="name"
                   maxLength={80}
+                  placeholder="Shown in your greeting"
                 />
               </div>
             )}
@@ -205,10 +215,10 @@ function AuthPage() {
                   id="password"
                   type="password"
                   required
-                  minLength={mode === "signup" ? MIN_PASSWORD_LENGTH : undefined}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                  placeholder="Anything works — no rules"
                 />
               </div>
             )}
