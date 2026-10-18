@@ -77,10 +77,16 @@ function AuthPage() {
     setNotice(null);
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({
+        let { error } = await supabase.auth.signInWithPassword({
           email,
           password: normalizePassword(password),
         });
+        if (error) {
+          ({ error } = await supabase.auth.signInWithPassword({
+            email,
+            password: legacyPassword(password),
+          }));
+        }
         if (error) throw error;
         const displayName = name.trim();
         if (displayName) {
