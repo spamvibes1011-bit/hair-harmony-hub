@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { signupMetadata } from "@/lib/signup";
+import { normalizePassword, signupMetadata } from "@/lib/signup";
 
 describe("Optional signup", () => {
   it("requires a nonblank full name", () => {
@@ -11,7 +11,12 @@ describe("Optional signup", () => {
       full_name: "Vidushi Agarwal",
     });
   });
-  it("allows simple passwords without character complexity", () => {
-    expect(signupMetadata("Evaluator", "aaaaaa").full_name).toBe("Evaluator");
+  it("accepts any password with no complexity rules", () => {
+    expect(signupMetadata("Evaluator", "a").full_name).toBe("Evaluator");
+    expect(normalizePassword("a")).toHaveLength(6);
+    expect(normalizePassword("longpassword")).toBe("longpassword");
+  });
+  it("rejects an empty password", () => {
+    expect(() => normalizePassword("")).toThrow("Enter a password.");
   });
 });
