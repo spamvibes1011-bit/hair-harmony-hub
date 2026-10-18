@@ -6,7 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { normalizePassword, signupMetadata } from "@/lib/signup";
+import { legacyPassword, normalizePassword, signupMetadata } from "@/lib/signup";
 
 type Mode = "signin" | "signup" | "forgot";
 
