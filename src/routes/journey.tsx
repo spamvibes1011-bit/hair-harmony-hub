@@ -81,7 +81,7 @@ function Journey() {
 
   return <main className="page">
     <div className="mb-6"><h1 className="text-2xl font-bold">My Hair Journey</h1><p className="mt-1 text-xs text-muted-foreground">Daily check-ins linked to your products.</p></div>
-    <div className="mb-6 flex flex-wrap gap-2">{ownedIds.map(getProduct).filter(x => x !== undefined && x.goal === 'Hair').map(x => <Button key={x.id} size="sm" variant={x.id === p.id ? 'default' : 'outline'} className="text-[11px]" onClick={() => { setCompare([]); navigate({ search: { product: x.id } }); }}>{x.name}</Button>)}</div>
+    <div className="mb-6 flex flex-wrap gap-2">{ownedIds.map(getProduct).filter(x => x !== undefined).filter(x => x.goal === 'Hair').map(x => <Button key={x.id} size="sm" variant={x.id === p.id ? 'default' : 'outline'} className="text-[11px]" onClick={() => { setCompare([]); navigate({ search: { product: x.id } }); }}>{x.name}</Button>)}</div>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <div className="space-y-6">
         <section className="panel">
