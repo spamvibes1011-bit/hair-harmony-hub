@@ -1,8 +1,9 @@
 import serum from '@/assets/roll-on.jpg';
 import shampoo from '@/assets/shampoo.jpg';
+import { CATALOG } from './catalog-data';
 
 export type Product = {
-  id: string; name: string; image: string; size: string; frequency: string; goal: 'Hair';
+  id: string; name: string; image?: string | undefined; size: string; frequency: string; goal: 'Hair' | 'Skin' | 'Body';
   batch: string; manufactured: string; expiry: string; startOffset: number;
   instructions: string[]; seedOffsets: number[];
 };
@@ -19,11 +20,15 @@ export const PRODUCTS: Product[] = [
     seedOffsets: [0, 2, 5, 7, 9, 12, 14, 16, 19] },
 ];
 
-export const getProduct = (id: string) => PRODUCTS.find(p => p.id === id);
+export const getProduct = (id: string): Product | undefined => PRODUCTS.find(p => p.id === id) ?? (() => {
+  const item = CATALOG.find(p => p.id === id);
+  if (!item) return undefined;
+  return { id: item.id, name: item.name, image: item.image, size: item.size, goal: item.goal, frequency: 'Follow the directions on your pack', batch: '', manufactured: '', expiry: '', startOffset: 0, seedOffsets: [], instructions: ['Follow the usage directions and frequency printed on your product packaging.', 'Stop use if irritation occurs and seek professional advice for concerning symptoms.'] };
+})();
 
 export function dayKey(d = new Date()) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 export function daysAgo(n: number) { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate() - n); }
-export function parseDay(key: string) { const [y, m, d] = key.split('-').map(Number); return new Date(y!, m! - 1, d!); }
+export function parseDay(key: string) { const [y = 1970, m = 1, d = 1] = key.split('-').map(Number); return new Date(y, m - 1, d); }
 export function diffDays(a: Date, b: Date) { return Math.round((parseDay(dayKey(b)).getTime() - parseDay(dayKey(a)).getTime()) / 86400000); }
 export const fmt = (d: Date) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 

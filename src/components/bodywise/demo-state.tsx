@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { PRODUCTS, dayKey, daysAgo } from './products';
 import { logProductApplication } from './reminder-schedule';
+import { addOwnedProduct, PRODUCT_IDS } from './product-numbers';
 export type Goal = 'Hair' | 'Skin' | 'Body';
 export type Status = 'Pending' | 'Under Review' | 'Resolved';
 export type StatusEvent = { status: Status; date: string; note: string };
@@ -8,6 +9,7 @@ export type Concern = { id: string; productId: string; type: string; details: st
 type History = Record<string, string[]>;
 type NewConcern = { productId: string; type: string; details: string; photo?: string | undefined; severe?: boolean | undefined; source?: Concern['source'] };
 type DemoState = {
+  ownedIds: string[]; addProduct: (id: string) => void;
   goal: Goal; applied: boolean; setGoal: (goal: Goal) => void; logApplication: () => void; ready: boolean;
   history: History; isAppliedToday: (id: string) => boolean; applyToday: (id: string) => void;
   concerns: Concern[]; addConcern: (c: NewConcern) => string; advanceConcern: (id: string) => void;
@@ -31,15 +33,16 @@ function seedConcerns(): Concern[] {
 function seedHistory(): History { return Object.fromEntries(PRODUCTS.map(p => [p.id, p.seedOffsets.map(o => dayKey(daysAgo(o)))])); }
 export function DemoProvider({ children }: { children: ReactNode }) {
   const [goal, setGoal] = useState<Goal>('Hair');
+  const [ownedIds, setOwnedIds] = useState<string[]>(PRODUCTS.map(p => p.id));
   const [history, setHistory] = useState<History>(seedHistory);
   const [concerns, setConcerns] = useState<Concern[]>(seedConcerns);
   const [ready, setReady] = useState(false);
-  useEffect(() => { try { const s = JSON.parse(localStorage.getItem(KEY) || '{}'); if (['Hair', 'Skin', 'Body'].includes(s.goal)) setGoal(s.goal); if (s.history) setHistory({ ...seedHistory(), ...s.history }); if (Array.isArray(s.concerns)) { const seeds = seedConcerns().filter(d => !s.concerns.some((c: Concern) => c.id === d.id)); setConcerns([...s.concerns, ...seeds]); } } catch { /* defaults */ } setReady(true); }, []);
-  useEffect(() => { if (ready) { try { localStorage.setItem(KEY, JSON.stringify({ goal, history, concerns })); } catch { /* session only */ } } }, [goal, history, concerns, ready]);
+  useEffect(() => { try { const s = JSON.parse(localStorage.getItem(KEY) || '{}'); if (Array.isArray(s.ownedIds)) setOwnedIds([...new Set([...PRODUCTS.map(p => p.id), ...s.ownedIds.filter((id: unknown) => PRODUCT_IDS.some(value => value === id))])]); if (['Hair', 'Skin', 'Body'].includes(s.goal)) setGoal(s.goal); if (s.history) setHistory({ ...seedHistory(), ...s.history }); if (Array.isArray(s.concerns)) { const seeds = seedConcerns().filter(d => !s.concerns.some((c: Concern) => c.id === d.id)); setConcerns([...s.concerns, ...seeds]); } } catch { /* defaults */ } setReady(true); }, []);
+  useEffect(() => { if (ready) { try { localStorage.setItem(KEY, JSON.stringify({ goal, history, concerns, ownedIds })); } catch { /* session only */ } } }, [goal, history, concerns, ownedIds, ready]);
   const isAppliedToday = (id: string) => (history[id] ?? []).includes(dayKey());
   const applyToday = (id: string) => setHistory(h => logProductApplication(h, id, dayKey()));
   const addConcern: DemoState['addConcern'] = c => { const id = crypto.randomUUID(); const date = new Date().toISOString(); setConcerns(list => [{ ...c, id, date, status: 'Pending', history: [{ status: 'Pending', date, note: NOTES.Pending }] }, ...list]); return id; };
   const advanceConcern = (id: string) => setConcerns(list => list.map(c => { const n = NEXT[c.status]; if (c.id !== id || !n) return c; const date = new Date().toISOString(); return { ...c, status: n, history: [...historyOf(c), { status: n, date, note: NOTES[n] }] }; }));
-  return <DemoContext.Provider value={{ goal, setGoal, ready, history, isAppliedToday, applyToday, concerns, addConcern, advanceConcern, applied: isAppliedToday('hair-growth-roll-on'), logApplication: () => applyToday('hair-growth-roll-on') }}>{children}</DemoContext.Provider>;
+  return <DemoContext.Provider value={{ ownedIds, addProduct: id => setOwnedIds(ids => addOwnedProduct(ids, id)), goal, setGoal, ready, history, isAppliedToday, applyToday, concerns, addConcern, advanceConcern, applied: isAppliedToday('hair-growth-roll-on'), logApplication: () => applyToday('hair-growth-roll-on') }}>{children}</DemoContext.Provider>;
 }
 export function useDemo() { const value = useContext(DemoContext); if (!value) throw new Error('Demo provider is required'); return value; }

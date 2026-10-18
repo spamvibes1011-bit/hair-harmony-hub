@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## App structure
+- Catalogue data is shared separately from presentation; owned IDs persist in the demo provider, and barcode matching uses an explicit number mapping so unknown codes never fabricate product identity.
 - Public content routes share navigation and the demo provider in the root shell so all demo workflows remain accessible without an account.
 - Product applications, journey entries/photos and concerns persist in browser-local demo state so navigation preserves evaluation progress without exposing account records.
 - Optional authentication provides display names through a shared context and stores signup names in user metadata so guest access never depends on an auth request.

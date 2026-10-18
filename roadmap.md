@@ -1,4 +1,6 @@
 # Dashboard
+- [x] Add + product entry with camera barcode scanning, manual product numbers and persistent ownership; verified addition, reload, duplicate handling, camera decoding with a test barcode, and dashboard/journey updates.
+- [ ] Match real company barcodes — blocked pending the company’s barcode-to-product list; current numbers are explicitly demo-only.
 - [x] Add persistent product reminders, dashboard next reminder, and application completion integration.
 - [x] Test reminder schedules, persistence, completion, and browser notification behaviour (in-app delivery verified; browser denied system notifications, no delivery claim).
 - [ ] Enable closed-app push notifications — blocked pending Firebase connection (declined).

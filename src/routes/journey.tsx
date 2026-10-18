@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useMemo, useState } from 'react';
-import { Camera, Check, ShieldAlert, Info, Images, TrendingUp, X } from 'lucide-react';
+import { Camera, Check, ShieldAlert, Info, Images, TrendingUp, X, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDemo } from '@/components/bodywise/demo-state';
 import { PRODUCTS, getProduct, daysAgo, dayKey, parseDay, fmt } from '@/components/bodywise/products';
@@ -40,7 +40,7 @@ function Journey() {
   const { product } = Route.useSearch();
   const navigate = Route.useNavigate();
   const p = getProduct(product ?? 'hair-growth-roll-on')!;
-  const { history } = useDemo();
+  const { history, ownedIds } = useDemo();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState('');
@@ -81,11 +81,11 @@ function Journey() {
 
   return <main className="page">
     <div className="mb-6"><h1 className="text-2xl font-bold">My Hair Journey</h1><p className="mt-1 text-xs text-muted-foreground">Daily check-ins linked to your products.</p></div>
-    <div className="mb-6 flex flex-wrap gap-2">{PRODUCTS.map(x => <Button key={x.id} size="sm" variant={x.id === p.id ? 'default' : 'outline'} className="text-[11px]" onClick={() => { setCompare([]); navigate({ search: { product: x.id } }); }}>{x.name}</Button>)}</div>
+    <div className="mb-6 flex flex-wrap gap-2">{ownedIds.map(getProduct).filter(x => x !== undefined).filter(x => x.goal === 'Hair').map(x => <Button key={x.id} size="sm" variant={x.id === p.id ? 'default' : 'outline'} className="text-[11px]" onClick={() => { setCompare([]); navigate({ search: { product: x.id } }); }}>{x.name}</Button>)}</div>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <div className="space-y-6">
         <section className="panel">
-          <div className="flex items-center gap-4"><div className="product-image h-16 w-16 shrink-0 rounded-xl"><img src={p.image} width={1024} height={1024} alt={p.name} /></div><div><h2 className="section-title">{p.name}</h2><p className="section-subtitle">{p.frequency}</p></div></div>
+          <div className="flex items-center gap-4"><div className="product-image h-16 w-16 shrink-0 rounded-xl">{p.image ? <img src={p.image} width={1024} height={1024} alt={p.name} /> : <div className="flex h-full items-center justify-center bg-accent text-primary"><Package /></div>}</div><div><h2 className="section-title">{p.name}</h2><p className="section-subtitle">{p.frequency}</p></div></div>
           <div className="mt-4 grid grid-cols-3 gap-3 text-center">{[['Started', fmt(start)], ['Days used', String(log.length)], ['Consistency', `${consistency}%`]].map(([k, v]) => <div key={k} className="rounded-xl bg-secondary p-3"><p className="text-base font-extrabold">{v}</p><p className="mt-1 text-[10px] text-muted-foreground">{k}</p></div>)}</div>
           <div className="mt-4 flex gap-2"><Button asChild variant="outline" className="flex-1 text-xs"><Link to="/products/$id" params={{ id: p.id }}>View product</Link></Button><Button asChild variant="outline" className="flex-1 text-xs"><Link to="/support" search={(() => { const e = mine[0]; const symptom = e?.comfort === COMFORT[2] || e?.comfort === COMFORT[1] ? 'Irritation' : e?.shedding === SHEDDING[2] ? 'Increased shedding' : undefined; return { product: p.id, symptom: symptom ?? 'Other', details: e ? `From check-in on ${e.date}: shedding ${e.shedding.toLowerCase()}; scalp ${e.comfort.toLowerCase()}; ${e.change.toLowerCase()}.${e.notes ? ' ' + e.notes : ''}` : undefined }; })()}><ShieldAlert /> Report a concern</Link></Button></div>
         </section>
