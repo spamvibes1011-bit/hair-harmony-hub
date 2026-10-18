@@ -224,7 +224,6 @@ function AuthPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                  placeholder="Anything works — no rules"
                 />
               </div>
             )}
